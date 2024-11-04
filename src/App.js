@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Home from './pages/Home';
+import Sets from './pages/Sets';
+import Parts from './pages/Parts';
+import Registration from './components/Registration';
+import Login from './components/Login';
+import NotFound from './pages/NotFound';
+import Layout from './components/Layout';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
-function App() {
+const App = () => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path = '/' element = {<Layout />} >
+          <Route index element = {<Home />} />
+          <Route path = 'sets' element = {<Sets />} />
+          <Route path = 'sets/:cat' element = {<Sets />} />
+          <Route path = 'sets/:cat/:set' element = {<Sets />} />
+          <Route path = 'parts' element = {<Parts />} />
+          <Route path = 'register' element = {<Registration />} />
+          <Route path = 'login' element = {<Login />} />
+          <Route path = '*' element = {<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
