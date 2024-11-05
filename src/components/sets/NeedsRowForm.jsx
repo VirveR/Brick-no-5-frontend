@@ -1,10 +1,10 @@
 import React, {useState, useContext} from 'react';
 import axios from 'axios';
-import { SetsContext } from '../SetsContext';
+import {PartsContext} from '../parts/PartsContext';
 
 const NeedsRowForm = ({setId, toggle, onAddRow}) => {
   //variables
-  const {bricksBasic} = useContext(SetsContext);
+  const {bricksBasic} = useContext(PartsContext);
   const [partId, setPartId] = useState('3005');
   const [version, setVersion] = useState('');
   const [color, setColor] = useState('white');
@@ -41,12 +41,12 @@ const NeedsRowForm = ({setId, toggle, onAddRow}) => {
 
           <div className='row' style={{justifyContent:'space-between', padding:5}}>
             <label htmlFor='partId'>part id:</label>
-              <select id='partId' name='partId' value={partId}
-                onChange = {(e) => setPartId(e.target.value)}>
-                {bricksBasic.map((brick) =>
-                  <option value={brick.partId}>{brick.partId} {brick.size}</option>
-                )}
-              </select>
+            <select id='partId' name='partId' value={partId}
+              onChange = {(e) => setPartId(e.target.value)}>
+              {bricksBasic.map((brick) =>
+                <option value={brick.partId}>{brick.partId} {brick.size}</option>
+              )}
+            </select>
           </div>
 
           <div className={'row form-row'}>

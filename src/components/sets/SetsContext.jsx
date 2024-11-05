@@ -21,21 +21,6 @@ export const SetsProvider = ({children}) => {
     {name: 'cat 1', img: '621-2'},
     {name: 'cat 2', img: '722-2'}
   ];
-  const bricksBasic = [
-    {partId: '3005', size: '1x1'},
-    {partId: '3004', size: '1x2'},
-    {partId: '3622', size: '1x3'},
-    {partId: '3010', size: '1x4'},
-    {partId: '3009', size: '1x6'},
-    {partId: '3008', size: '1x8'},
-    {partId: '6111', size: '1x10'},
-    {partId: '3003', size: '2x2'},
-    {partId: '3002', size: '2x3'},
-    {partId: '3001', size: '2x4'},
-    {partId: '2456', size: '2x6'},
-    {partId: '3007', size: '2x8'},
-    {partId: '3006', size: '2x10'} 
-  ];
 
   //get all sets
   const getSets = async () => {
@@ -69,7 +54,7 @@ export const SetsProvider = ({children}) => {
   }, []);
 
   return (
-    <SetsContext.Provider value = {{decades, themes, bricksBasic, subsets, setSubsets, getSubsetsDecade}}>
+    <SetsContext.Provider value = {{decades, themes, subsets, setSubsets, getSubsetsDecade}}>
       {children}
     </SetsContext.Provider>
   );

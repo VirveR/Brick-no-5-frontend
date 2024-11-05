@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from "react";
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import {AuthContext} from "../components/AuthContext";
-import {SetsContext} from '../components/SetsContext';
-import NeedsRowForm from "../components/sets/NeedsRowForm";
+import {AuthContext} from "../AuthContext";
+import {SetsContext} from './SetsContext';
+import NeedsRowForm from "./NeedsRowForm";
 
 const Set = ({cat, setId}) => {
   //variables

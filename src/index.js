@@ -4,14 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {AuthProvider} from './components/AuthContext';
-import { SetsProvider } from './components/SetsContext';
+import {SetsProvider} from './components/sets/SetsContext';
+import {PartsProvider} from './components/parts/PartsContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
       <SetsProvider>
-        <App />
+        <PartsProvider>
+          <App />
+        </PartsProvider>
       </SetsProvider>
     </AuthProvider>
   </React.StrictMode>
