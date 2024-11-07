@@ -13,11 +13,11 @@ export const PartsProvider = ({children}) => {
     {name: 'Bricks, special', link: 'bricks-special', img: '3003'},
     {name: 'Plates, special', link: 'plates-special', img: '3003'},
   ];
-  const colors = ['white', 'red', 'blue', 'yellow', 'black', 'gray', 'trans-clear', 'dark-brown', 'brown', 'green', 'tan', 'trans-yellow', 'trans-red', 'trans-blue', 'trans-green'];
+  const colors = ['white', 'red', 'blue', 'yellow', 'black', 'gray', 'trans-clear', 'dark-gray', 'brown', 'green', 'tan', 'trans-yellow', 'trans-red', 'trans-blue', 'trans-green'];
   const logos = ['old', 'small', 'pretty', 'messy', 'premodern', 'spiky', 'modern'];
   const pips = ['low-side', 'side-side', 'mid-side', 'top'];
   const infos = ['none', 'Pat.pend', 'Pat.pend obsc.', 'part no'];
-  const strucs = ['none', 'no bottom studs', 'vert. lines', 'split tubes', 'horiz. lines 1', 'horiz. lines 2', 'horiz. lines 3', 'hollow bottom studs', 'cross-support', 'frost'];
+  const strucs = ['none', 'hollow', 'vert. lines', 'split tubes', 'horiz. lines 1', 'horiz. lines 2', 'horiz. lines 3', 'hollow bottom studs', 'cross-support'];
 
   //get all parts
   const getParts = async () => {

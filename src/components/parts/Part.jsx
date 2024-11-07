@@ -3,16 +3,18 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {AuthContext} from "../AuthContext";
 import {PartsContext} from './PartsContext';
+import {SetsContext} from '../sets/SetsContext';
 import VersRowForm from './VersRowForm.jsx';
 
 const Set = ({cat, partId}) => {
   //variables
   const {user} = useContext(AuthContext);
+  const {subparts, colors} = useContext(PartsContext);
+  const {sets} = useContext(SetsContext);
   const [part, setPart] = useState(null);
   const [versRows, setVersRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formVisible, setFormVisible] = useState(false);
-  const {subparts} = useContext(PartsContext);
   const [prev, setPrev] = useState(null);
   const [next, setNext] = useState(null);
   const [version, setVersion] = useState(null);
@@ -24,9 +26,8 @@ const Set = ({cat, partId}) => {
 
   //effects
   useEffect(() => {
-    const getSet = async () => {
+    const getPart = async () => {
       const response = await axios.get(`/api/parts/${partId}`);
-      console.log(response.data.versions);
       const data = await response.data;
       await setPart(data);
       setVersRows(data.versions);
@@ -39,8 +40,46 @@ const Set = ({cat, partId}) => {
       setLoading(false);
     }
     
-    getSet();
+    getPart();
   }, [partId, subparts]);
+
+  useEffect(() => {
+    if (!partId || !colors || !sets) return;
+
+    const result = colors.map((color) => {
+      const setsWithColor = sets.reduce((acc, set) => {
+        const needsColor = set.needs.filter((need) =>
+          need.partId === partId && need.color === color
+        );
+        needsColor.forEach((need) => {
+          acc.push({setId: set.setId, year: set.year, quant: need.quant});
+        });
+        return acc;
+      }, []);
+      return {color: color, sets: setsWithColor};
+    });
+
+    const versSets = versRows.map((vers) => {
+      const vs = result.filter((color) =>
+        color.sets.some(
+          (set) => set.year >= vers.yearFrom && set.year <= vers.yearTo
+        )
+      );
+      const vets = vs.reduce((acc, color) => {
+        color.sets.forEach((set) => {
+          if (set.year >= vers.yearFrom && set.year <= vers.yearTo) {
+            acc.push({color: color, setId: set.setId, year: set.year, quant: set.quant});
+          }
+        })
+        return acc;
+      }, []);
+      return {...vers, sets: vets};
+    });
+
+    setVersRows(versSets);
+  }, [sets, colors, partId]);
+
+  console.log(versRows);
 
   /*** RETURN ***/
   if (loading) {
@@ -83,6 +122,7 @@ const Set = ({cat, partId}) => {
 
           {/* part info */}
           <section className={"col set-info"}>
+            
             <h2>{part.partId}: {part.size} {part.type}</h2>
             <h3>{part.yearFrom} - {part.yearTo}</h3>
             <div className="row">
@@ -98,31 +138,27 @@ const Set = ({cat, partId}) => {
         <section aria-labelledby="part-version-heading">
           <h2 id="part-version-heading">Versions</h2>
 
+          <p className="small">Disclaimer: These versions are based on my own research. I'm fairly certain, I've got the timeline right, but 
+            with a great probability the years are not exact, the nature of reality not being as clear cut as a model.
+            There are exceptions and oddities to every version, but these cover the main lines. The gaps in mold identifier
+            letters and numbers are due to the limits of my collection. I may change some details, as I research further.
+          </p>
+
           {versRows.map((row, index) =>
             <div key={index} className={"cat-container"} style={{position:'relative'}}>
-              <h3 style={{margin:5}}>{partId}-{row.versId} {row.year} </h3>
+              <h3 style={{margin:5}}>{partId}-{row.versId} {row.yearFrom} - {row.yearTo} </h3>
 
                 <div className="row" style={{justifyContent:'space-between'}}>
 
                   {/* version images */}
                   <div className="col">
                     <div className="row">
-                      <img src={`../../assets/parts/${partId}-out${row.out}.png`} alt='outside view' style={{width:50, backgroundColor:'#F2CD37', marginLeft:10}} />
+                      <img src={`../../assets/parts/${partId}-${row.versId}.png`} alt='outside view' style={{height:100, backgroundColor:'#F2CD37', marginLeft:10}} />
                       <ul>
                         <li>logo: {row.logo}</li>
                         <li>injection mark: {row.pip}</li>
-                      </ul>
-                    </div>
-                    <div className="row">
-                      <img src={`../../assets/parts/${partId}-in${row.in}.png`} alt='inside view' style={{width:50, backgroundColor:'#F2CD37', marginLeft:10}} />
-                      <ul>
-                        <li>inside: {row.struc}</li>
-                      </ul>
-                    </div>
-                    <div className="row">
-                      <img src={`../../assets/parts/${partId}-bot${row.bot}.png`} alt='bottom view' style={{width:50, backgroundColor:'#F2CD37', marginLeft:10}} />
-                      <ul>
-                      <li>mold id: {row.mold}</li>
+                        <li>inside struct.: {row.struc}</li>
+                        <li>mold id: {row.mold}</li>
                         <li>place id: {row.place}</li>
                         <li>info: {row.info}</li>
                       </ul>

@@ -54,7 +54,7 @@ export const SetsProvider = ({children}) => {
   }, []);
 
   return (
-    <SetsContext.Provider value = {{decades, themes, subsets, setSubsets, getSubsetsDecade}}>
+    <SetsContext.Provider value = {{decades, themes, sets, subsets, setSubsets, getSets, getSubsetsDecade}}>
       {children}
     </SetsContext.Provider>
   );

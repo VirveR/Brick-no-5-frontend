@@ -5,18 +5,15 @@ import {PartsContext} from './PartsContext';
 const VersRowForm = ({partId, version, toggle, onAddRow}) => {
   //variables
   const {logos, pips, infos, strucs, colors} = useContext(PartsContext);
-  const [edit, setEdit] = useState(false);
   const [versId, setVersId] = useState('');
-  const [year, setYear] = useState(1954);
+  const [yearFrom, setYearFrom] = useState(1954);
+  const [yearTo, setYearTo] = useState(1900);
   const [logo, setLogo] = useState('old');
   const [pip, setPip] = useState('low-side');
   const [mold, setMold] = useState('');
   const [place, setPlace] = useState('');
   const [info, setInfo] = useState('none');
-  const [struc, setStruc] = useState('none');
-  const [out, setOut] = useState('');
-  const [inn, setInn] = useState('');
-  const [bot, setBot] = useState('');
+  const [struc, setStruc] = useState([]);
   const [cols, setCols] = useState([]);
   const [error, setError] = useState(false);
   
@@ -24,34 +21,33 @@ const VersRowForm = ({partId, version, toggle, onAddRow}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newRow = {versId: versId, year: year, logo: logo, pip: pip, mold: mold, place: place, info: info, struc: struc, out: out, in: inn, bot: bot, colors: cols};
-      if (edit) await axios.put(`/api/parts/add/${partId}`, newRow);
-      else await axios.put(`/api/parts/edit/${partId}`, newRow);
+      const newRow = {versId: versId, yearFrom: yearFrom, yearTo: yearTo, logo: logo, pip: pip, mold: mold, place: place, info: info, struc: struc, colors: cols};
+      if (version) {
+        await axios.put(`/api/parts/edit/${partId}`, newRow);
+      }
+      else {
+        await axios.put(`/api/parts/add/${partId}`, newRow);
+      }
       onAddRow(newRow);
       toggle();
     } catch (err) {
       console.error('Adding row failed:', err);
-      setError(err.response.data.message);
+      setError(err.response.data.error);
     }
   };
-
-  console.log(edit);
 
   //effects
   useEffect(() => {
     if (version) {
-      setEdit(true);
       setVersId(version.versId);
-      setYear(version.year);
+      setYearFrom(version.yearFrom);
+      setYearTo(version.yearTo);
       setLogo(version.logo);
       setPip(version.pip);
       setMold(version.mold);
       setPlace(version.place);
       setInfo(version.info);
       setStruc(version.struc);
-      setOut(version.out);
-      setInn(version.in);
-      setBot(version.bot);
       setCols(version.colors);
     }
   }, [version]);
@@ -77,9 +73,15 @@ const VersRowForm = ({partId, version, toggle, onAddRow}) => {
           </div>
 
           <div className={'row form-row'}>
-            <label htmlFor='year'>year:</label>
-            <input id='year' name='year' value={year} type='number'
-              onChange = {(e) => setYear(e.target.value)} />
+            <label htmlFor='yearFrom'>from:</label>
+            <input id='yearFrom' name='yearFrom' value={yearFrom} type='number'
+              onChange = {(e) => setYearFrom(e.target.value)} />
+          </div>
+
+          <div className={'row form-row'}>
+            <label htmlFor='yearTo'>to:</label>
+            <input id='yearTo' name='yearTo' value={yearTo} type='number'
+              onChange = {(e) => setYearTo(e.target.value)} />
           </div>
 
           <div className='row' style={{justifyContent:'space-between', padding:5}}>
@@ -124,34 +126,21 @@ const VersRowForm = ({partId, version, toggle, onAddRow}) => {
             </select>
           </div>
 
+          <h3 style={{marginBottom:0}}>inner structures:</h3>
           <div className='row' style={{justifyContent:'space-between', padding:5}}>
-            <label htmlFor='struc'>structures:</label>
-            <select id='struc' name='struc' value={struc}
-              onChange = {(e) => setStruc(e.target.value)}>
-              {strucs.map((s, index) =>
-                <option key={index} value={s}>{s}</option>
-              )}
-            </select>
+            {strucs.map((str, index) => (
+              <label key={index}>
+                <input type="checkbox" id={`struc-${str}`} value={str} checked={struc.includes(str)} style={{marginRight:10}}
+                  onChange={(e) => {
+                    if (e.target.checked) setStruc([...struc, str]);
+                    else setStruc(struc.filter((s) => s !== str));
+                  }} />
+                  {str}
+              </label>
+            ))}
           </div>
 
-          <div className={'row form-row'}>
-            <label htmlFor='out'>outside:</label>
-            <input id='out' name='out' value={out}
-              onChange = {(e) => setOut(e.target.value)} />
-          </div>
-
-          <div className={'row form-row'}>
-            <label htmlFor='in'>inside:</label>
-            <input id='in' name='in' value={inn}
-              onChange = {(e) => setInn(e.target.value)} />
-          </div>
-
-          <div className={'row form-row'}>
-            <label htmlFor='bot'>bottom:</label>
-            <input id='bot' name='bot' value={bot}
-              onChange = {(e) => setBot(e.target.value)} />
-          </div>
-
+          <h3 style={{marginBottom:0}}>colors:</h3>
           <div className='row' style={{justifyContent:'space-between', padding:5}}>
             {colors.map((color, index) => (
               <label key={index}>
