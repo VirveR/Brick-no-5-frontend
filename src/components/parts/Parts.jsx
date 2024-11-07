@@ -7,7 +7,7 @@ import Part from './Part';
 function Parts() {
   //variables
   const {cat, part} = useParams();
-  const {types, bricksBasic} = useContext(PartsContext);
+  const {types} = useContext(PartsContext);
 
   /*** RETURN ***/
 
@@ -49,7 +49,7 @@ function Parts() {
     //one part view
     else {
       return (
-        <Part cat={cat} part={part}/>
+        <Part cat={cat} partId={part}/>
       );
     }
   }

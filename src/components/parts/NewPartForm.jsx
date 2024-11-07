@@ -42,7 +42,7 @@ const NewPartForm = ({toggle}) => {
             <select id='type' name='type' value={type}
               onChange = {(e) => setType(e.target.value)}>
               {types.map((type) =>
-                <option value={type.link}>{type.name}</option>
+                <option key={type.name} value={type.link}>{type.name}</option>
               )}
             </select>
           </div>

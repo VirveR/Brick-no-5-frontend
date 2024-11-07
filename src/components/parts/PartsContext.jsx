@@ -13,22 +13,11 @@ export const PartsProvider = ({children}) => {
     {name: 'Bricks, special', link: 'bricks-special', img: '3003'},
     {name: 'Plates, special', link: 'plates-special', img: '3003'},
   ];
-
-  const bricksBasic = [
-    {partId: '3005', size: '1x1'},
-    {partId: '3004', size: '1x2'},
-    {partId: '3622', size: '1x3'},
-    {partId: '3010', size: '1x4'},
-    {partId: '3009', size: '1x6'},
-    {partId: '3008', size: '1x8'},
-    {partId: '6111', size: '1x10'},
-    {partId: '3003', size: '2x2'},
-    {partId: '3002', size: '2x3'},
-    {partId: '3001', size: '2x4'},
-    {partId: '2456', size: '2x6'},
-    {partId: '3007', size: '2x8'},
-    {partId: '3006', size: '2x10'} 
-  ];
+  const colors = ['white', 'red', 'blue', 'yellow', 'black', 'gray', 'trans-clear', 'dark-brown', 'brown', 'green', 'tan', 'trans-yellow', 'trans-red', 'trans-blue', 'trans-green'];
+  const logos = ['old', 'small', 'pretty', 'messy', 'premodern', 'spiky', 'modern'];
+  const pips = ['low-side', 'side-side', 'mid-side', 'top'];
+  const infos = ['none', 'Pat.pend', 'Pat.pend obsc.', 'part no'];
+  const strucs = ['none', 'no bottom studs', 'vert. lines', 'split tubes', 'horiz. lines 1', 'horiz. lines 2', 'horiz. lines 3', 'hollow bottom studs', 'cross-support', 'frost'];
 
   //get all parts
   const getParts = async () => {
@@ -61,7 +50,7 @@ export const PartsProvider = ({children}) => {
   }, []);
 
   return (
-    <PartsContext.Provider value = {{types, subparts, getSubparts}}>
+    <PartsContext.Provider value = {{types, colors, logos, pips, infos, strucs, subparts, getSubparts}}>
       {children}
     </PartsContext.Provider>
   );

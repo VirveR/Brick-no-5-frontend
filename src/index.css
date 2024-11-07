@@ -75,6 +75,11 @@ button:hover {
   height: 30px;
 }
 
+.icon-s {
+  width: 15px;
+  height: 15px;
+}
+
 .close {
   width: 15px;
   height: 15px;
@@ -208,6 +213,8 @@ nav {
   box-shadow: 1px 1px 1px #767676;
   border-radius: 3px;
   padding: 10px;
+  margin: 10px;
+  width: 95%;
 }
 
 #set-details-sec {
@@ -222,18 +229,18 @@ nav {
   box-shadow: 1px 1px 1px #767676;
 }
 
-#set-info {
+.set-info {
   padding: 0px 20px;
   margin-bottom: 0px;
 }
 
-#set-info > h2 {
+.set-info > h2 {
   margin: 0;
   padding: 5px 0;
   max-width: 320px;
 }
 
-#set-info > h3 {
+.set-info > h3 {
   margin: 0;
   padding: 5px 0;
 }

@@ -77,7 +77,7 @@ const Set = ({cat, setId}) => {
         </div>
 
         {/* set info */}
-        <section className="col" id="set-info">
+        <section className={"set-info col"}>
           <h2>{set.setId}: {set.name}</h2>
           <h3>{set.year}</h3>
           <div className="row">
@@ -100,9 +100,11 @@ const Set = ({cat, setId}) => {
             </tr>
             )}
           </tbody></table>
+
           {user ? <button onClick={toggleForm}>add row</button> : null}
           {formVisible ? <NeedsRowForm setId = {setId} 
             toggle={toggleForm} onAddRow={addRow} /> : null}
+            
         </section>
       </div>
     );

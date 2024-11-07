@@ -54,7 +54,7 @@ const Subparts = ({cat}) => {
           )}
         </tbody></table>
 
-        {/* add set (TO BE REMOVED WHEN DONE) */}
+        {/* add part (TO BE REMOVED WHEN DONE) */}
         {user ? <button onClick={toggleForm}>add part</button> : null}
         {formVisible ? <NewPartForm toggle={toggleForm} /> : null}
 
