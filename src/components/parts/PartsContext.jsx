@@ -7,6 +7,19 @@ export const PartsProvider = ({children}) => {
   //variables
   const [parts, setParts] = useState([]);
   const [subparts, setSubparts] = useState([]);
+  const bricksBasic = [
+    {partId: '3005', size: '1x1'},
+    {partId: '3004', size: '1x2'},
+    {partId: '3622', size: '1x3'},
+    {partId: '3010', size: '1x4'},
+    {partId: '3009', size: '1x6'},
+    {partId: '3008', size: '1x8'},
+    {partId: '3003', size: '2x2'},
+    {partId: '3002', size: '2x3'},
+    {partId: '3001', size: '2x4'},
+    {partId: '3007', size: '2x8'},
+    {partId: '3006', size: '2x10'}
+  ]
   const types = [
     {name: 'Bricks, basic', link: 'bricks-basic', img: '3003'},
     {name: 'Plates, basic', link: 'plates-basic', img: '3003'},
@@ -50,7 +63,7 @@ export const PartsProvider = ({children}) => {
   }, []);
 
   return (
-    <PartsContext.Provider value = {{types, colors, logos, pips, infos, strucs, subparts, getSubparts}}>
+    <PartsContext.Provider value = {{bricksBasic, types, colors, logos, pips, infos, strucs, subparts, getSubparts}}>
       {children}
     </PartsContext.Provider>
   );

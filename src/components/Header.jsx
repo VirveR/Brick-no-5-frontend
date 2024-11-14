@@ -48,6 +48,7 @@ const Header = () => {
           <Link to = '/' className = 'nav-item'>Home</Link>
           <Link to = '/sets' className = 'nav-item'>Sets</Link>
           <Link to = '/parts' className = 'nav-item'>Parts</Link>
+          <Link to = '/coll' className = 'nav-item'>Collection</Link>
         </nav>
 
         {/* log in/out */}

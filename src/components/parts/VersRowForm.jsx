@@ -4,7 +4,7 @@ import {PartsContext} from './PartsContext';
 
 const VersRowForm = ({partId, version, toggle, onAddRow}) => {
   //variables
-  const {logos, pips, infos, strucs, colors} = useContext(PartsContext);
+  const {logos, pips, infos, strucs} = useContext(PartsContext);
   const [versId, setVersId] = useState('');
   const [yearFrom, setYearFrom] = useState(1954);
   const [yearTo, setYearTo] = useState(1900);
@@ -14,14 +14,13 @@ const VersRowForm = ({partId, version, toggle, onAddRow}) => {
   const [place, setPlace] = useState('');
   const [info, setInfo] = useState('none');
   const [struc, setStruc] = useState([]);
-  const [cols, setCols] = useState([]);
   const [error, setError] = useState(false);
   
   //handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newRow = {versId: versId, yearFrom: yearFrom, yearTo: yearTo, logo: logo, pip: pip, mold: mold, place: place, info: info, struc: struc, colors: cols};
+      const newRow = {versId: versId, yearFrom: yearFrom, yearTo: yearTo, logo: logo, pip: pip, mold: mold, place: place, info: info, struc: struc};
       if (version) {
         await axios.put(`/api/parts/edit/${partId}`, newRow);
       }
@@ -48,7 +47,6 @@ const VersRowForm = ({partId, version, toggle, onAddRow}) => {
       setPlace(version.place);
       setInfo(version.info);
       setStruc(version.struc);
-      setCols(version.colors);
     }
   }, [version]);
 
@@ -136,20 +134,6 @@ const VersRowForm = ({partId, version, toggle, onAddRow}) => {
                     else setStruc(struc.filter((s) => s !== str));
                   }} />
                   {str}
-              </label>
-            ))}
-          </div>
-
-          <h3 style={{marginBottom:0}}>colors:</h3>
-          <div className='row' style={{justifyContent:'space-between', padding:5}}>
-            {colors.map((color, index) => (
-              <label key={index}>
-                <input type="checkbox" id={`color-${color}`} value={color} checked={cols.includes(color)} style={{marginRight:10}}
-                  onChange={(e) => {
-                    if (e.target.checked) setCols([...cols, color]);
-                    else setCols(cols.filter((c) => c !== color));
-                  }} />
-                  {color}
               </label>
             ))}
           </div>

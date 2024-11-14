@@ -7,7 +7,7 @@ import NewSetForm from './NewSetForm';
 const Subsets = ({cat}) => {
   //variables
   const {user} = useContext(AuthContext);
-  const {decades, subsets, getSubsetsDecade} = useContext(SetsContext);
+  const {decades, subsets, setSubsets, getSubsetsDecade} = useContext(SetsContext);
   const navigate = useNavigate();
   const [formVisible, setFormVisible] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -16,6 +16,7 @@ const Subsets = ({cat}) => {
 
   //functions
   const toggleForm = () => setFormVisible(!formVisible);
+  const addSet = (newSet) => setSubsets([...subsets, newSet]);
 
   //effects
   useEffect(() => {
@@ -74,7 +75,7 @@ const Subsets = ({cat}) => {
 
         {/* add set (TO BE REMOVED WHEN DONE) */}
         {user ? <button onClick={toggleForm}>add set</button> : null}
-        {formVisible ? <NewSetForm toggle={toggleForm} /> : null}
+        {formVisible ? <NewSetForm toggle={toggleForm} onAddSet={addSet} /> : null}
 
       </article>
     );

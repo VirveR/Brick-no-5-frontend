@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './pages/Home';
 import Sets from './components/sets/Sets';
 import Parts from './components/parts/Parts';
+import Collection from './components/colls/Coll';
 import Registration from './components/Registration';
 import Login from './components/Login';
 import NotFound from './pages/NotFound';
@@ -21,6 +22,7 @@ const App = () => {
           <Route path = 'parts' element = {<Parts />} />
           <Route path = 'parts/:cat' element = {<Parts />} />
           <Route path = 'parts/:cat/:part' element = {<Parts />} />
+          <Route path = 'coll' element = {<Collection />} />
           <Route path = 'register' element = {<Registration />} />
           <Route path = 'login' element = {<Login />} />
           <Route path = '*' element = {<NotFound />} />

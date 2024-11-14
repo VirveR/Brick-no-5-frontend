@@ -9,27 +9,36 @@ import VersRowForm from './VersRowForm.jsx';
 const Set = ({cat, partId}) => {
   //variables
   const {user} = useContext(AuthContext);
-  const {subparts, colors} = useContext(PartsContext);
+  const {subparts} = useContext(PartsContext);
   const {sets} = useContext(SetsContext);
+  const [pets, setPets] = useState([]);
   const [part, setPart] = useState(null);
   const [versRows, setVersRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formVisible, setFormVisible] = useState(false);
+  const [visibleSets, setVisibleSets] = useState({});
   const [prev, setPrev] = useState(null);
   const [next, setNext] = useState(null);
   const [version, setVersion] = useState(null);
 
   //functions
   const toggleForm = () => setFormVisible(!formVisible);
+  const toggleVisibleSets = (rowIndex, color) => {
+    const key = `${rowIndex}-${color}`;
+    setVisibleSets((prevState) => ({
+      ...prevState, [key]: !prevState[key]
+    }));
+  };
   const addRow = (newRow) => setVersRows([...versRows, newRow]);
   const editVersion = (version) => {setVersion(version); toggleForm();}
 
   //effects
+  //get part information
   useEffect(() => {
     const getPart = async () => {
       const response = await axios.get(`/api/parts/${partId}`);
       const data = await response.data;
-      await setPart(data);
+      setPart(data);
       setVersRows(data.versions);
       //prev & next index for navigation
       const currI = subparts.findIndex((part) => part.partId === partId);
@@ -43,43 +52,31 @@ const Set = ({cat, partId}) => {
     getPart();
   }, [partId, subparts]);
 
+  //get sets including part groupped by color
   useEffect(() => {
-    if (!partId || !colors || !sets) return;
-
-    const result = colors.map((color) => {
-      const setsWithColor = sets.reduce((acc, set) => {
-        const needsColor = set.needs.filter((need) =>
-          need.partId === partId && need.color === color
-        );
-        needsColor.forEach((need) => {
-          acc.push({setId: set.setId, year: set.year, quant: need.quant});
-        });
-        return acc;
-      }, []);
-      return {color: color, sets: setsWithColor};
-    });
-
-    const versSets = versRows.map((vers) => {
-      const vs = result.filter((color) =>
-        color.sets.some(
-          (set) => set.year >= vers.yearFrom && set.year <= vers.yearTo
-        )
+    const updatedVersRows = versRows.map( vers => {
+      const start = vers.yearFrom;
+      const end = vers.yearTo;
+      
+      const filteredSets = sets.filter(set =>
+        set.year >= start && set.year <= end
       );
-      const vets = vs.reduce((acc, color) => {
-        color.sets.forEach((set) => {
-          if (set.year >= vers.yearFrom && set.year <= vers.yearTo) {
-            acc.push({color: color, setId: set.setId, year: set.year, quant: set.quant});
-          }
-        })
-        return acc;
-      }, []);
-      return {...vers, sets: vets};
+
+      const setsByColor = {};
+      filteredSets.forEach(set => {
+        set.needs.filter(row => row.partId === partId)
+          .forEach(row => {
+            if (!setsByColor[row.color]) {
+              setsByColor[row.color] = [];
+            }
+            setsByColor[row.color].push({id: set.setId, name: set.name, year: set.year, quant: row.quant});
+          });
+      });
+      return {...vers, sets: setsByColor}
     });
 
-    setVersRows(versSets);
-  }, [sets, colors, partId]);
-
-  console.log(versRows);
+    setPets(updatedVersRows);
+  }, [versRows, sets, partId]);
 
   /*** RETURN ***/
   if (loading) {
@@ -144,8 +141,8 @@ const Set = ({cat, partId}) => {
             letters and numbers are due to the limits of my collection. I may change some details, as I research further.
           </p>
 
-          {versRows.map((row, index) =>
-            <div key={index} className={"cat-container"} style={{position:'relative'}}>
+          {pets.map((row, rowIndex) =>
+            <div key={rowIndex} className={"cat-container"} style={{position:'relative'}}>
               <h3 style={{margin:5}}>{partId}-{row.versId} {row.yearFrom} - {row.yearTo} </h3>
 
                 <div className="row" style={{justifyContent:'space-between'}}>
@@ -164,17 +161,44 @@ const Set = ({cat, partId}) => {
                       </ul>
                     </div>
                   </div>
-
-                  {/* colors */}
-                  <div className="col">
-                    {row.colors.map((col, index) =>
-                      <p key={index} style={{margin:5}}>
-                        <span className={`color-box ${col}`}></span>
-                      </p>
-                    )}
-                  </div>
                   
                 </div>
+
+                {/* colors */}
+                <table><tbody>
+                  {Object.entries(row.sets).map(([color, sets]) => {
+                    const key = `${rowIndex}-${color}`;
+                    const total = sets.map(s => s.quant).reduce((acc, a) => acc + a, 0);
+                    return (
+                      <React.Fragment key={key}>
+                        <tr style={{margin:0, marginRight:5, cursor:'pointer'}} onClick={() => toggleVisibleSets(rowIndex, color)}>
+                          <td><span className={`color-box ${color}`}></span> {color}</td>
+                          <td></td>
+                          <td>total {total}</td>
+                          <td> in {sets.length} sets</td>
+                        </tr>
+
+                        {visibleSets[key] && (
+                          <tr>
+                            <td colSpan='4' style={{padding:8}}>
+                              <table><tbody>
+                                {sets.map((set, setIndex) => (
+                                  <tr key={setIndex}>
+                                    <td style={{padding:0, paddingRight:10}}>{set.year}</td> 
+                                    <td style={{padding:0, paddingRight:10}}>{set.id}</td>
+                                    <td style={{padding:0, paddingRight:10}}>{set.name}</td>
+                                    <td>needs {set.quant}</td>
+                                    <td>has x</td>
+                                  </tr>
+                                ))}
+                              </tbody></table>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody></table>
                   
               <img src='../../assets/edit.png' alt='edit' className="close" onClick={() => editVersion(row)}/>
             </div>

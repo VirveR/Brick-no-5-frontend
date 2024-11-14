@@ -6,7 +6,6 @@ const NeedsRowForm = ({setId, toggle, onAddRow}) => {
   //variables
   const {bricksBasic} = useContext(PartsContext);
   const [partId, setPartId] = useState('3005');
-  const [version, setVersion] = useState('');
   const [color, setColor] = useState('white');
   const [quant, setQuant] = useState(0);
   const [error, setError] = useState(false);
@@ -15,7 +14,7 @@ const NeedsRowForm = ({setId, toggle, onAddRow}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newRow = {partId: partId, version: version, color: color, quant: quant};
+      const newRow = {partId: partId, color: color, quant: quant};
       await axios.put(`/api/sets/add/${setId}`, newRow);
       onAddRow(newRow);
       toggle();
@@ -44,15 +43,9 @@ const NeedsRowForm = ({setId, toggle, onAddRow}) => {
             <select id='partId' name='partId' value={partId}
               onChange = {(e) => setPartId(e.target.value)}>
               {bricksBasic.map((brick) =>
-                <option value={brick.partId}>{brick.partId} {brick.size}</option>
+                <option key={brick.partId} value={brick.partId}>{brick.partId} {brick.size}</option>
               )}
             </select>
-          </div>
-
-          <div className={'row form-row'}>
-            <label htmlFor='version'>version:</label>
-            <input id='version' name='version' value={version}
-              onChange = {(e) => setVersion(e.target.value)} />
           </div>
 
           <div className={'row form-row'}>
@@ -66,6 +59,7 @@ const NeedsRowForm = ({setId, toggle, onAddRow}) => {
                 <option value='black'>black</option>
                 <option value='gray'>gray</option>
                 <option value='trans-clear'>trans-clear</option>
+                <option value='brown'>brown</option>
               </select>
             
           </div>
