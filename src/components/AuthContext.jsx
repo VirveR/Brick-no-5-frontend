@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
   //variables
   const [user, setUser] = useState(null);
+  const [coll, setColl] = useState(null);
   const [loading, setLoading] = useState(true);
 
   //functions
@@ -27,15 +28,22 @@ export const AuthProvider = ({children}) => {
     alert('You are logged out now');
   };
 
+  const getUserColl = async () => {
+    const id = '67365904ade47cbd5a3c7aa2'
+    const response = await axios.get(`/api/colls/${id}`);
+    setColl(response.data);
+  };
+
   //effects
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     setUser(storedUser);
+    getUserColl();
     setLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value = {{user, setUser, loading, login, logout}}>
+    <AuthContext.Provider value = {{user, setUser, loading, coll, login, logout}}>
       {children}
     </AuthContext.Provider>
   );

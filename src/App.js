@@ -2,7 +2,7 @@ import React from 'react';
 import Home from './pages/Home';
 import Sets from './components/sets/Sets';
 import Parts from './components/parts/Parts';
-import Collection from './components/colls/Coll';
+import Collection from './components/colls/Colls';
 import Registration from './components/Registration';
 import Login from './components/Login';
 import NotFound from './pages/NotFound';

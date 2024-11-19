@@ -8,10 +8,11 @@ import VersRowForm from './VersRowForm.jsx';
 
 const Set = ({cat, partId}) => {
   //variables
-  const {user} = useContext(AuthContext);
+  const {user, coll} = useContext(AuthContext);
   const {subparts} = useContext(PartsContext);
   const {sets} = useContext(SetsContext);
   const [pets, setPets] = useState([]);
+  const [collPart, setCollPart] = useState([]);
   const [part, setPart] = useState(null);
   const [versRows, setVersRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +41,11 @@ const Set = ({cat, partId}) => {
       const data = await response.data;
       setPart(data);
       setVersRows(data.versions);
+      //collection
+      if (coll.length > 0) {
+        const filteredColl = coll.parts.filter((part) => part.partId === partId);
+        setCollPart(filteredColl);
+      }
       //prev & next index for navigation
       const currI = subparts.findIndex((part) => part.partId === partId);
       const prevI = currI > 0 ? subparts[currI - 1] : null;
@@ -169,13 +175,23 @@ const Set = ({cat, partId}) => {
                   {Object.entries(row.sets).map(([color, sets]) => {
                     const key = `${rowIndex}-${color}`;
                     const total = sets.map(s => s.quant).reduce((acc, a) => acc + a, 0);
+                    const collMatch = collPart.find((p) => p.versId === row.versId && p.color === color);
                     return (
                       <React.Fragment key={key}>
                         <tr style={{margin:0, marginRight:5, cursor:'pointer'}} onClick={() => toggleVisibleSets(rowIndex, color)}>
                           <td><span className={`color-box ${color}`}></span> {color}</td>
                           <td></td>
                           <td>total {total}</td>
-                          <td> in {sets.length} sets</td>
+                          <td> in {sets.length} sets</td> 
+                          <td>|</td>
+                          <td>you have {collMatch ? collMatch.quant : 0}</td>
+                          {/* Add part to collection */}
+                          <td>
+                            <form>
+                              <input id='collQuant' name='collQuant' type='number' style={{width:50}}/>
+                              <span style={{padding:3}}>&#10133;</span>
+                            </form>
+                          </td>
                         </tr>
 
                         {visibleSets[key] && (
